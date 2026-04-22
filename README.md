@@ -1,29 +1,30 @@
 # MUS 108: The Language of Music
 
-Course materials for MUS 108: The Language of Music at California State University, East Bay. Introductory music fundamentals for non-majors (GE Area 3A). Covers rhythm, meter, form, pitch, scales, harmony, and cadences, with consistent attention to how technical content connects to cultural meaning and personal experience.
+**California State University, East Bay · GE Area 3A · 3 Units**
 
-Instructor: Ines Thiebaut ([ines.thiebaut@csueastbay.edu](mailto:ines.thiebaut@csueastbay.edu))
+Welcome to the course page for MUS 108. This is an introduction to the language of music in Western traditions, built around listening, analysis, and short creative projects. Over the semester we cover rhythm and meter, pitch, scales, chords, cadences, and form, and we look at how these technical elements shape expression, cultural meaning, and identity across different settings.
+
+No prior musical training is required. Designed for non-majors.
 
 ---
 
 ## Final Creative Project
 
-Interactive HTML guides for the Final Creative Project. Students choose one of three genre options and work through scales, chord progressions, lyric templates, worked examples, and reflection prompts.
+Your final project is your chance to apply what you've learned this semester to something of your own. You'll choose one of three genre options, compose a short piece, and write a reflection connecting your work to the cultural and historical context of the music you're making.
 
-| File | Description |
-|------|-------------|
-| `final-project.html` | Hub page with project overview, timeline, submission requirements, and links to all three option guides |
-| `folk.html` | Option A: Folk Song. Scale explorer (major, minor, pentatonic), chord progressions, expandable verse/chorus/bridge template |
-| `blues.html` | Option B: Blues Song. Interactive 12-bar chord chart, blues scale, AAB lyric template |
-| `popular.html` | Option C: Popular Song. Chord progression explorer, melody principles, full song structure builder |
+**[Open the Final Project guide →](final-project.html)**
 
-All four files should live in the same folder. The hub page links to the three guides by relative path.
+The guide walks you through the full project timeline (Draft 1 on April 20, Draft 2 on April 27, Final Presentation on May 4), what to submit, and links out to interactive handouts for each of the three options: Folk Song, Blues Song, or Popular Song.
 
 ---
 
 ## Course Information
 
-- Units: 3
-- GE Area: 3A (Arts)
-- Prerequisites: None. No prior musical training required.
-- Format: In-person or online (depending on term)
+- **Instructor:** Ines Thiebaut
+- **Email:** [ines.thiebaut@csueastbay.edu](mailto:ines.thiebaut@csueastbay.edu)
+- **Office:** MB 2038
+- **Office Hours:** Wednesdays 1–3pm, in-person (MB 2012) or on Zoom
+- **Format:** In-person or online, depending on term
+- **Grading:** A–F or CR/NC (student choice)
+
+For the full syllabus, assignment schedule, and all course readings, please refer to Canvas.
