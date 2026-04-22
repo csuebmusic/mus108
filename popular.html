@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option C: Popular Song - MUS 108</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d1a;
+    --paper: #eeeaf8;
+    --accent: #4a3a8a;
+    --accent2: #8a5a2a;
+    --warm: #d4cff0;
+    --faint: #9990c8;
+    --highlight: #c0a840;
+    --mid: #e0daf2;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5'%3E%3Crect width='5' height='5' fill='%23eeeaf8'/%3E%3Ccircle cx='1' cy='1' r='0.4' fill='%237060b0' opacity='0.15'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 60px 40px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--faint);
+    padding: 28px 0 22px;
+    margin-bottom: 48px;
+  }
+
+  .course-tag {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  h1 em { font-style: italic; color: var(--accent); }
+
+  .subtitle {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #2a2050;
+    font-style: italic;
+  }
+
+  section { margin-bottom: 48px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--warm);
+    padding-bottom: 8px;
+  }
+
+  p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #1a1530;
+    margin-bottom: 1em;
+  }
+
+  /* Progression selector */
+  .prog-explorer {
+    background: var(--ink);
+    border-radius: 4px;
+    padding: 32px 36px;
+    margin: 24px 0;
+    position: relative;
+  }
+
+  .prog-explorer-label {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--faint);
+    opacity: 0.7;
+    margin-bottom: 20px;
+  }
+
+  .prog-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  .prog-btn {
+    padding: 7px 18px;
+    border-radius: 3px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.5);
+    background: transparent;
+    font-family: 'Source Serif 4', serif;
+    transition: all 0.2s;
+  }
+
+  .prog-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .prog-panel { display: none; }
+  .prog-panel.visible { display: block; }
+
+  .chord-strip {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .cs-box {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    padding: 14px 20px;
+    text-align: center;
+    min-width: 70px;
+    transition: background 0.2s;
+  }
+
+  .cs-box:hover { background: rgba(255,255,255,0.15); }
+
+  .cs-roman {
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.35);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .cs-chord {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--paper);
+    line-height: 1;
+    display: block;
+  }
+
+  .cs-box.tonic .cs-chord { color: var(--highlight); }
+  .cs-box.relative .cs-chord { color: #a78bfa; }
+  .cs-box.subdominant .cs-chord { color: #86efac; }
+  .cs-box.dominant .cs-chord { color: #fca5a5; }
+
+  .chord-repeat {
+    font-size: 9px;
+    color: rgba(255,255,255,0.25);
+    margin: 0 4px;
+    align-self: center;
+    letter-spacing: 0.08em;
+  }
+
+  .prog-info {
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    padding: 16px 20px;
+    font-size: 0.88rem;
+    color: rgba(238,234,248,0.7);
+    line-height: 1.65;
+    font-style: italic;
+  }
+
+  /* Structure builder */
+  .structure-builder { margin: 24px 0; }
+
+  .struct-row {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--warm);
+  }
+
+  .struct-row:last-child { border-bottom: none; }
+
+  .struct-name {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .struct-desc {
+    font-size: 0.88rem;
+    color: #4a4070;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .struct-badge {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .badge-required {
+    background: var(--accent);
+    color: white;
+  }
+
+  .badge-optional {
+    background: var(--warm);
+    color: var(--accent);
+  }
+
+  /* Melody guide */
+  .melody-guide {
+    background: var(--mid);
+    border-left: 3px solid var(--accent);
+    padding: 24px 28px;
+    border-radius: 0 4px 4px 0;
+    margin: 20px 0;
+  }
+
+  .mg-title {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .mg-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #1a1530;
+  }
+
+  .mg-term {
+    font-weight: 400;
+    min-width: 130px;
+    font-style: italic;
+    color: var(--accent);
+    font-size: 0.85rem;
+  }
+
+  /* Lyric writer */
+  .lyric-writer { margin: 20px 0; }
+
+  .lw-section { margin-bottom: 24px; }
+
+  .lw-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .lw-tag {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  .lw-hint {
+    font-size: 0.8rem;
+    color: var(--faint);
+    font-style: italic;
+  }
+
+  .song-line {
+    border: none;
+    border-bottom: 1.5px solid var(--faint);
+    background: transparent;
+    font-family: 'Source Serif 4', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--ink);
+    padding: 7px 2px;
+    width: 100%;
+    margin-bottom: 8px;
+    outline: none;
+    transition: border-color 0.2s;
+    display: block;
+  }
+
+  .song-line:focus { border-bottom-color: var(--accent); }
+  .song-line::placeholder { color: var(--faint); font-style: italic; }
+
+  /* Example */
+  .example-box {
+    background: white;
+    border: 1px solid var(--faint);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin: 20px 0;
+    position: relative;
+  }
+
+  .example-box::before {
+    content: 'EXAMPLE';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: white;
+    padding: 0 8px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--faint);
+  }
+
+  .ex-section {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+
+  .ex-section:first-child { margin-top: 0; }
+
+  .example-lyric {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 2;
+    color: #1a1530;
+  }
+
+  /* Try this */
+  .try-this {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 6px;
+    padding: 36px 40px;
+    margin: 32px 0;
+  }
+
+  .try-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--highlight);
+    margin-bottom: 14px;
+  }
+
+  .try-this h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    margin-bottom: 16px;
+  }
+
+  .try-this p {
+    color: rgba(238,234,248,0.8);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1em;
+  }
+
+  .prompt-steps { margin: 20px 0; counter-reset: steps; }
+
+  .prompt-step {
+    counter-increment: steps;
+    padding: 14px 0 14px 44px;
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: rgba(238,234,248,0.85);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .prompt-step:last-child { border-bottom: none; }
+
+  .prompt-step::before {
+    content: counter(steps);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 28px;
+    height: 28px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    font-size: 11px;
+    color: var(--highlight);
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+    line-height: 28px;
+  }
+
+  /* Checklist */
+  .checklist { margin: 16px 0; }
+
+  .check-item {
+    display: flex;
+    gap: 14px;
+    align-items: start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--warm);
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #1a1530;
+  }
+
+  .check-icon { color: var(--accent); font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+
+  /* Reflection */
+  .reflection-area { margin: 16px 0; }
+
+  .reflection-q {
+    font-style: italic;
+    color: #2a2050;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+
+  .reflection-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--faint);
+    background: transparent;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    padding: 8px 2px;
+    margin-bottom: 20px;
+    outline: none;
+    resize: none;
+    min-height: 60px;
+    transition: border-color 0.2s;
+  }
+
+  .reflection-input:focus { border-bottom-color: var(--accent); }
+  .reflection-input::placeholder { color: var(--faint); font-style: italic; }
+
+  .footer {
+    border-top: 1px solid var(--faint);
+    padding-top: 24px;
+    margin-top: 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-left { font-size: 11px; color: var(--faint); letter-spacing: 0.1em; }
+
+  .footer-nav { display: flex; gap: 16px; }
+
+  .footer-nav a {
+    font-size: 11px;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .footer-nav a:hover { border-bottom-color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .page { padding: 40px 24px 60px; }
+    h1 { font-size: 2.2rem; }
+    .struct-row { grid-template-columns: 70px 1fr; }
+    .struct-badge { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="course-tag">MUS 108 - The Language of Music &nbsp;·&nbsp; Final Creative Project</div>
+    <h1>Option C:<br><em>Popular Song</em></h1>
+    <p class="subtitle">A guide for building your piece, step by step.</p>
+  </header>
+
+  <section>
+    <div class="section-label">What you're making</div>
+    <p>The Popular Song option asks you to create a short song with a clear melodic structure, basic harmony, and a verse/chorus form. Popular music is one of the most widely shared forms of human expression on the planet. It crosses cultures, languages, and generations, and it does so largely through the same handful of harmonic and formal patterns used over and over again in new combinations.</p>
+    <p>Your task is not to write a hit. It's to understand how the building blocks work, and to make something that's yours. You know scales. That's enough to get started.</p>
+  </section>
+
+  <!-- Progressions -->
+  <section>
+    <div class="section-label">Standard popular progressions</div>
+    <p>Most popular music in the Western tradition rotates through a small set of chord progressions. Below are three of the most common, all in the key of C. Use the buttons to explore each one. You don't have to use any of them, but if you want a harmonic foundation, these are reliable starting points.</p>
+
+    <div class="prog-explorer">
+      <div class="prog-explorer-label">Click a progression to explore it - key of C</div>
+      <div class="prog-buttons">
+        <button class="prog-btn active" onclick="showProg('pop')">I–V–vi–IV</button>
+        <button class="prog-btn" onclick="showProg('fifties')">I–vi–IV–V</button>
+        <button class="prog-btn" onclick="showProg('minor')">vi–IV–I–V</button>
+      </div>
+
+      <div class="prog-panel visible" id="prog-pop">
+        <div class="chord-strip">
+          <div class="cs-box tonic">
+            <span class="cs-roman">I</span>
+            <span class="cs-chord">C</span>
+          </div>
+          <span class="chord-repeat">→</span>
+          <div class="cs-box dominant">
+            <span class="cs-roman">V</span>
+            <span class="cs-chord">G</span>
+          </div>
+          <span class="chord-repeat">→</span>
+          <div class="cs-box relative">
+            <span class="cs-roman">vi</span>
+            <span class="cs-chord">Am</span>
+          </div>
+          <span class="chord-repeat">→</span>
+          <div class="cs-box subdominant">
+            <span class="cs-roman">IV</span>
+            <span class="cs-chord">F</span>
+          </div>
+          <span class="chord-repeat">→ repeat</span>
+        </div>
+        <div class="prog-info">The I–V–vi–IV progression is sometimes called "the four-chord song" because it underlies an almost absurd number of popular songs across five decades, from '80s power ballads through modern pop. The vi chord (Am) is the relative minor of C, which gives this loop its slightly bittersweet quality even when the tempo is upbeat. Try putting your verse on the first two chords and your chorus on all four.</div>
+      </div>
+
+      <div class="prog-panel" id="prog-fifties">
+        <div class="chord-strip">
+          <div class="cs-box tonic">
+            <span class="cs-roman">I</span>
+            <span class="cs-chord">C</span>
+          </div>
+          <span class="chord-repeat">→</span>
+          <div class="cs-box relative">
+            <span class="cs-roman">vi</span>
+            <span class="cs-chord">Am</span>
+          </div>
+          <span class="chord-repeat">→</span>
+          <div class="cs-box subdominant">
+            <span class="cs-roman">IV</span>
+            <span class="cs-chord">F</span>
+          </div>
+          <span class="chord-repeat">→</span>
+          <div class="cs-box dominant">
+            <span class="cs-roman">V</span>
+            <span class="cs-chord">G</span>
+          </div>
+          <span class="chord-repeat">→ repeat</span>
+        </div>
+        <div class="prog-info">The I–vi–IV–V "50s progression" was the backbone of doo-wop and early rock and roll. The V chord (G) at the end creates strong forward motion back to the I. It wants to resolve, which is what gives this loop its driving energy. Think of it as a loop with a built-in sense of return. One of the most satisfying harmonic cycles in the Western tradition.</div>
+      </div>
+
+      <div class="prog-panel" id="prog-minor">
+        <div class="chord-strip">
+          <div class="cs-box relative">
+            <span class="cs-roman">vi</span>
+            <span class="cs-chord">Am</span>
+          </div>
+          <span class="chord-repeat">→</span>
+          <div class="cs-box subdominant">
+            <span class="cs-roman">IV</span>
+            <span class="cs-chord">F</span>
+          </div>
+          <span class="chord-repeat">→</span>
+          <div class="cs-box tonic">
+            <span class="cs-roman">I</span>
+            <span class="cs-chord">C</span>
+          </div>
+          <span class="chord-repeat">→</span>
+          <div class="cs-box dominant">
+            <span class="cs-roman">V</span>
+            <span class="cs-chord">G</span>
+          </div>
+          <span class="chord-repeat">→ repeat</span>
+        </div>
+        <div class="prog-info">The same four chords as I–V–vi–IV, but starting on the vi chord (Am). Starting on a minor chord gives the whole progression a darker, more introspective feel even though all the same notes are present. This is a good choice if your song has a reflective or emotionally complex subject. Very common in indie pop, R&B, and singer-songwriter music.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Melody tips -->
+  <section>
+    <div class="section-label">Writing a melody</div>
+    <p>Popular melodies are built from the same material you already know: scales. Here are a few principles that characterize how melodies work in pop music.</p>
+
+    <div class="melody-guide">
+      <div class="mg-title">Melody principles</div>
+      <div class="mg-row">
+        <span class="mg-term">Stepwise motion</span>
+        <span>Most of a melody moves by steps, meaning neighboring notes in the scale. This is what makes melodies singable.</span>
+      </div>
+      <div class="mg-row">
+        <span class="mg-term">Leaps for emphasis</span>
+        <span>A leap (a jump over one or more scale degrees) draws attention to the note it lands on. Use them sparingly, at emotional peaks.</span>
+      </div>
+      <div class="mg-row">
+        <span class="mg-term">Return to the tonic</span>
+        <span>Phrases often end on the tonic note (the home note of the scale). This creates a sense of rest or resolution.</span>
+      </div>
+      <div class="mg-row">
+        <span class="mg-term">Repetition with variation</span>
+        <span>Pop melodies often repeat a short rhythmic or melodic idea (called a motif) and then vary it slightly. This is what makes them stick.</span>
+      </div>
+      <div class="mg-row">
+        <span class="mg-term">Verse vs. chorus contrast</span>
+        <span>Chorus melodies often sit higher in pitch and move more actively than verse melodies. This contrast is part of what makes a chorus feel like a lift.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Structure -->
+  <section>
+    <div class="section-label">Song structure</div>
+    <p>The standard popular song form uses some combination of these sections. Verse and chorus are the minimum; everything else adds contrast and development.</p>
+
+    <div class="structure-builder">
+      <div class="struct-row">
+        <span class="struct-name">Intro</span>
+        <span class="struct-desc">Establishes the mood and key, often just the chord progression with no melody yet</span>
+        <span class="struct-badge badge-optional">optional</span>
+      </div>
+      <div class="struct-row">
+        <span class="struct-name">Verse</span>
+        <span class="struct-desc">Tells the story; lyrics change each time, melody stays mostly the same</span>
+        <span class="struct-badge badge-required">required</span>
+      </div>
+      <div class="struct-row">
+        <span class="struct-name">Pre-chorus</span>
+        <span class="struct-desc">Builds tension between verse and chorus: a short transitional section that makes the chorus feel earned</span>
+        <span class="struct-badge badge-optional">optional</span>
+      </div>
+      <div class="struct-row">
+        <span class="struct-name">Chorus</span>
+        <span class="struct-desc">The emotional core; lyrics and melody stay the same each time (this is what listeners remember)</span>
+        <span class="struct-badge badge-required">required</span>
+      </div>
+      <div class="struct-row">
+        <span class="struct-name">Bridge</span>
+        <span class="struct-desc">A contrasting section that appears once, usually after the second chorus. It offers a new perspective before the final return.</span>
+        <span class="struct-badge badge-optional">optional</span>
+      </div>
+      <div class="struct-row">
+        <span class="struct-name">Outro</span>
+        <span class="struct-desc">Closes the song, often a fade on the chorus or a short instrumental conclusion</span>
+        <span class="struct-badge badge-optional">optional</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lyric writer -->
+  <section>
+    <div class="section-label">Draft your lyrics here</div>
+    <p>Use these fields to start writing. The minimum is one verse and one chorus. Think of the verse as the setup and the chorus as the payoff.</p>
+
+    <div class="lyric-writer">
+      <div class="lw-section">
+        <div class="lw-header">
+          <span class="lw-tag">Verse 1</span>
+          <span class="lw-hint">Set the scene. Specific details work better than general feelings.</span>
+        </div>
+        <input class="song-line" type="text" placeholder="Line 1…">
+        <input class="song-line" type="text" placeholder="Line 2…">
+        <input class="song-line" type="text" placeholder="Line 3…">
+        <input class="song-line" type="text" placeholder="Line 4…">
+      </div>
+
+      <div class="lw-section">
+        <div class="lw-header">
+          <span class="lw-tag">Chorus</span>
+          <span class="lw-hint">Your central idea. This is what people take home with them.</span>
+        </div>
+        <input class="song-line" type="text" placeholder="Line 1 - your hook…">
+        <input class="song-line" type="text" placeholder="Line 2…">
+        <input class="song-line" type="text" placeholder="Line 3 (optional)…">
+      </div>
+
+      <div class="lw-section">
+        <div class="lw-header">
+          <span class="lw-tag">Verse 2</span>
+          <span class="lw-hint">Optional: advances or complicates the story. Same melody as verse 1.</span>
+        </div>
+        <input class="song-line" type="text" placeholder="Line 1…">
+        <input class="song-line" type="text" placeholder="Line 2…">
+        <input class="song-line" type="text" placeholder="Line 3…">
+        <input class="song-line" type="text" placeholder="Line 4…">
+      </div>
+
+      <div class="lw-section">
+        <div class="lw-header">
+          <span class="lw-tag">Bridge</span>
+          <span class="lw-hint">Optional: a shift in perspective or emotional register before the final chorus.</span>
+        </div>
+        <input class="song-line" type="text" placeholder="Line 1…">
+        <input class="song-line" type="text" placeholder="Line 2…">
+      </div>
+    </div>
+  </section>
+
+  <!-- Example -->
+  <section>
+    <div class="section-label">A completed example</div>
+    <p>Here is what a simple, complete popular song submission looks like. The goal is not polished songwriting. It's applying what you know about form, melody, and harmony to make something with a clear structure and a real idea behind it.</p>
+
+    <div class="example-box">
+      <div class="ex-section">Verse 1</div>
+      <div class="example-lyric">
+        I check my phone before I'm even out of bed,<br>
+        The notifications pile up inside my head.<br>
+        Somebody needs something I don't know how to give,<br>
+        But here I am again, just trying to live.
+      </div>
+      <div class="ex-section">Chorus</div>
+      <div class="example-lyric">
+        Turn it off for a minute,<br>
+        Just breathe and be in it.<br>
+        The world keeps spinning with or without me online.
+      </div>
+      <div class="ex-section">Note on this example</div>
+      <p style="font-size:0.88rem; color:#4a3a8a; font-style:italic; margin-top:8px;">This song uses the I–V–vi–IV progression in C, a stepwise melody that sits in the middle of the C major scale, and a verse/chorus structure. The chorus is shorter, higher, and more conclusive than the verse. The reflection would explain all of this in course vocabulary and discuss how popular music functions as a site of personal and shared expression.</p>
+    </div>
+  </section>
+
+  <!-- Try this -->
+  <div class="try-this">
+    <div class="try-label">Try this</div>
+    <h3>Writing from the chorus backward</h3>
+    <p>Most songs are written outward from the chorus. Start with what you want to say, then write the story that leads there.</p>
+    <div class="prompt-steps">
+      <div class="prompt-step">Write one sentence that captures something you actually feel or believe. It doesn't have to be profound. ("I'm tired of being the responsible one." "I keep coming back to this place." "Nothing feels the same since we moved.")</div>
+      <div class="prompt-step">Trim that sentence down to its sharpest form, as few words as possible while still making sense. That's your chorus hook.</div>
+      <div class="prompt-step">Add one or two lines around it to complete the chorus. Keep them short and direct. The chorus should feel like it could land at the end of any conversation about this topic.</div>
+      <div class="prompt-step">Now write the verse: what's the specific situation that led you to the feeling in the chorus? Use concrete details (where, when, what exactly happened).</div>
+      <div class="prompt-step">Hum a melody over the C major scale (C D E F G A B C). Your verse melody should feel like it's building toward something; your chorus melody should feel like the thing it was building toward. Even a few notes repeated rhythmically counts as a melody.</div>
+    </div>
+  </div>
+
+  <!-- Reflection -->
+  <section>
+    <div class="section-label">Reflection notes</div>
+    <p>Your 1–2 page reflection should use course vocabulary and connect your piece to popular music as a form of personal and global expression.</p>
+    <div class="reflection-area">
+      <p class="reflection-q">Which progression did you use, and what was the harmonic effect? How do the chords support the emotional arc of your song?</p>
+      <textarea class="reflection-input" placeholder="Notes…" rows="3"></textarea>
+
+      <p class="reflection-q">How does popular music function as personal expression? As global expression? What traditions or artists does your piece relate to?</p>
+      <textarea class="reflection-input" placeholder="Notes…" rows="3"></textarea>
+
+      <p class="reflection-q">What structural and melodic choices did you make, and what were you trying to communicate through them?</p>
+      <textarea class="reflection-input" placeholder="Notes…" rows="3"></textarea>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">What a complete submission includes</div>
+    <div class="checklist">
+      <div class="check-item">
+        <span class="check-icon">◆</span>
+        <span>A creative component: notation, a chord chart, a recording, or any clear representation of your melody and lyrics. Clarity matters; production value does not.</span>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">◆</span>
+        <span>At least one verse and one chorus with a melody and lyrics. The melody should use a named scale and have a clear structural difference between the verse and chorus.</span>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">◆</span>
+        <span>A 1–2 page written reflection explaining your musical choices, connecting your piece to how popular music functions as personal and global expression, and using course vocabulary.</span>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">◆</span>
+        <span>A brief in-class introduction during the final week (1–2 minutes). You do not have to perform it live.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-left">MUS 108 · CSU East Bay · Final Creative Project</div>
+    <nav class="footer-nav">
+      <a href="#">← Option A: Folk Song</a>
+      <a href="#">← Option B: Blues Song</a>
+    </nav>
+  </footer>
+
+</div>
+
+<script>
+  function showProg(id) {
+    document.querySelectorAll('.prog-panel').forEach(el => el.classList.remove('visible'));
+    document.querySelectorAll('.prog-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('prog-' + id).classList.add('visible');
+    event.target.classList.add('active');
+  }
+</script>
+</body>
+</html>

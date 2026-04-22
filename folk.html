@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option A: Folk Song - MUS 108</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0f1a0a;
+    --paper: #eef4e8;
+    --accent: #3a6b35;
+    --warm: #c8dbbf;
+    --faint: #9db895;
+    --highlight: #d4a843;
+    --mid: #d8ead0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Crect width='6' height='6' fill='%23eef4e8'/%3E%3Ccircle cx='1' cy='1' r='0.5' fill='%238aaa82' opacity='0.2'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 60px 40px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .header {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--faint);
+    padding: 28px 0 22px;
+    margin-bottom: 48px;
+  }
+
+  .course-tag {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .subtitle {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #2a4a25;
+    font-style: italic;
+  }
+
+  section { margin-bottom: 48px; }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--warm);
+    padding-bottom: 8px;
+  }
+
+  p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #1a2e15;
+    margin-bottom: 1em;
+  }
+
+  /* Scale display */
+  .scale-block {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+    padding: 32px 36px;
+    margin: 24px 0;
+    position: relative;
+  }
+
+  .scale-block-label {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 24px;
+    opacity: 0.7;
+  }
+
+  .scale-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .scale-tab {
+    padding: 6px 16px;
+    border-radius: 3px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.5);
+    background: transparent;
+    font-family: 'Source Serif 4', serif;
+    transition: all 0.2s;
+  }
+
+  .scale-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .scale-display { display: none; }
+  .scale-display.visible { display: block; }
+
+  .scale-notes {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .note-pill {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 3px;
+    padding: 8px 16px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--paper);
+  }
+
+  .note-pill.tonic { background: var(--accent); border-color: var(--accent); }
+  .note-pill.characteristic { background: var(--highlight); border-color: var(--highlight); color: var(--ink); }
+
+  .note-arrow { color: rgba(255,255,255,0.25); font-size: 0.8rem; }
+
+  .scale-desc {
+    font-size: 0.88rem;
+    color: rgba(245,244,240,0.6);
+    font-style: italic;
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+
+  /* Progression */
+  .progression-display {
+    background: var(--mid);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin: 20px 0;
+  }
+
+  .prog-label {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+
+  .prog-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .prog-tab {
+    padding: 5px 14px;
+    border-radius: 3px;
+    font-size: 11px;
+    cursor: pointer;
+    border: 1px solid var(--faint);
+    color: var(--faint);
+    background: transparent;
+    font-family: 'Source Serif 4', serif;
+    transition: all 0.2s;
+  }
+
+  .prog-tab.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .prog-content { display: none; }
+  .prog-content.visible { display: block; }
+
+  .chord-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .chord-box {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 3px;
+    padding: 10px 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  .chord-box.accent { background: var(--accent); }
+
+  .chord-arrow { color: var(--faint); font-size: 1rem; padding: 0 4px; }
+
+  .prog-note {
+    font-size: 0.88rem;
+    font-style: italic;
+    color: #3a5a35;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  /* Structure template */
+  .structure-template { margin: 20px 0; }
+
+  .section-block {
+    border: 1px solid var(--warm);
+    border-radius: 4px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--warm);
+    padding: 10px 16px;
+    cursor: pointer;
+  }
+
+  .section-tag {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 400;
+    min-width: 60px;
+  }
+
+  .section-desc {
+    font-size: 0.88rem;
+    color: #2a4a25;
+    font-style: italic;
+  }
+
+  .section-toggle {
+    margin-left: auto;
+    font-size: 0.8rem;
+    color: var(--faint);
+  }
+
+  .section-body {
+    padding: 16px;
+    display: none;
+  }
+
+  .section-body.open { display: block; }
+
+  .line-group { margin-bottom: 12px; }
+
+  .line-hint {
+    font-size: 0.8rem;
+    color: var(--faint);
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+
+  .song-line {
+    border: none;
+    border-bottom: 1.5px solid var(--faint);
+    background: transparent;
+    font-family: 'Source Serif 4', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--ink);
+    padding: 6px 2px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .song-line:focus { border-bottom-color: var(--accent); }
+  .song-line::placeholder { color: var(--faint); font-style: italic; }
+
+  /* Example */
+  .example-box {
+    background: white;
+    border: 1px solid var(--faint);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin: 20px 0;
+    position: relative;
+  }
+
+  .example-box::before {
+    content: 'EXAMPLE';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: white;
+    padding: 0 8px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--faint);
+  }
+
+  .example-section-label {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+
+  .example-section-label:first-child { margin-top: 0; }
+
+  .example-lyric {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 2;
+    color: #1a2e15;
+  }
+
+  /* Try this */
+  .try-this {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 6px;
+    padding: 36px 40px;
+    margin: 32px 0;
+  }
+
+  .try-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--highlight);
+    margin-bottom: 14px;
+  }
+
+  .try-this h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    margin-bottom: 16px;
+  }
+
+  .try-this p {
+    color: rgba(238,244,232,0.8);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1em;
+  }
+
+  .prompt-steps { margin: 20px 0; counter-reset: steps; }
+
+  .prompt-step {
+    counter-increment: steps;
+    padding: 14px 0 14px 44px;
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: rgba(238,244,232,0.85);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .prompt-step:last-child { border-bottom: none; }
+
+  .prompt-step::before {
+    content: counter(steps);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 28px;
+    height: 28px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    font-size: 11px;
+    color: var(--highlight);
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+    line-height: 28px;
+  }
+
+  /* Checklist */
+  .checklist { margin: 16px 0; }
+
+  .check-item {
+    display: flex;
+    gap: 14px;
+    align-items: start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--warm);
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #1a2e15;
+  }
+
+  .check-icon { color: var(--accent); font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+
+  /* Reflection */
+  .reflection-area { margin: 16px 0; }
+
+  .reflection-q {
+    font-style: italic;
+    color: #2a4a25;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+
+  .reflection-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--faint);
+    background: transparent;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    padding: 8px 2px;
+    margin-bottom: 20px;
+    outline: none;
+    resize: none;
+    min-height: 60px;
+    transition: border-color 0.2s;
+  }
+
+  .reflection-input:focus { border-bottom-color: var(--accent); }
+  .reflection-input::placeholder { color: var(--faint); font-style: italic; }
+
+  .footer {
+    border-top: 1px solid var(--faint);
+    padding-top: 24px;
+    margin-top: 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer-left { font-size: 11px; color: var(--faint); letter-spacing: 0.1em; }
+
+  .footer-nav { display: flex; gap: 16px; }
+
+  .footer-nav a {
+    font-size: 11px;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .footer-nav a:hover { border-bottom-color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .page { padding: 40px 24px 60px; }
+    h1 { font-size: 2.2rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="course-tag">MUS 108 - The Language of Music &nbsp;·&nbsp; Final Creative Project</div>
+    <h1>Option A:<br><em>Folk Song</em></h1>
+    <p class="subtitle">A guide for building your piece, step by step.</p>
+  </header>
+
+  <section>
+    <div class="section-label">What you're making</div>
+    <p>The Folk Song option invites you to write a short piece in a folk style: a song with a clear scale, simple melodic motion, and text (lyrics or a poem). Folk music has always been about community: it carries stories, values, and memory across generations. Your reflection will ask you to connect your piece to this idea.</p>
+    <p>You don't need to be a songwriter, and you definitely don't need to be able to play an instrument. What matters is that you use what you've learned about pitch and scale, make deliberate choices, and write about why you made them.</p>
+  </section>
+
+  <!-- Scale chooser -->
+  <section>
+    <div class="section-label">Choose your scale</div>
+    <p>Folk music draws on many different scale traditions. You already know two of them: major and minor. The third option below, the pentatonic scale, is a new one. It uses only five notes (the word "penta" means five) instead of the full seven-note pattern of major or minor, and it follows its own specific intervalic pattern. Because of that smaller note set, nearly any combination of its notes sounds stable and musical. It appears in folk traditions across East Asia, West Africa, the British Isles, and the Americas. The tonic (home note) is highlighted in green. Use the buttons to explore each scale.</p>
+
+    <div class="scale-block">
+      <div class="scale-block-label">Scale explorer - click to switch</div>
+      <div class="scale-tabs">
+        <button class="scale-tab active" onclick="showScale('major')">G Major</button>
+        <button class="scale-tab" onclick="showScale('minor')">A Minor</button>
+        <button class="scale-tab" onclick="showScale('pentatonic')">G Pentatonic</button>
+      </div>
+
+      <div class="scale-display visible" id="scale-major">
+        <div class="scale-notes">
+          <div class="note-pill tonic">G</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">A</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">B</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">C</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">D</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">E</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">F♯</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill tonic">G</div>
+        </div>
+        <p class="scale-desc">G Major has a bright, open quality. It follows the same whole-step/half-step pattern you already know. Think Irish reels, American bluegrass, and hymns. Works well for hopeful or celebratory themes.</p>
+      </div>
+
+      <div class="scale-display" id="scale-minor">
+        <div class="scale-notes">
+          <div class="note-pill tonic">A</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">B</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill characteristic">C</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">D</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">E</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill characteristic">F</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">G</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill tonic">A</div>
+        </div>
+        <p class="scale-desc">A Natural Minor has a more somber, introspective quality. The highlighted notes (C and F) are a half-step lower than their equivalents in major, which is what creates the minor sound. Works well for laments, memory, and longing.</p>
+      </div>
+
+      <div class="scale-display" id="scale-pentatonic">
+        <div class="scale-notes">
+          <div class="note-pill tonic">G</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">A</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">B</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">D</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill">E</div>
+          <span class="note-arrow">→</span>
+          <div class="note-pill tonic">G</div>
+        </div>
+        <p class="scale-desc">The pentatonic scale has five notes arranged in a specific intervalic pattern: whole step, whole step, minor third, whole step, then back to the octave. Because there are no half-steps between adjacent notes, almost any combination sounds stable. A good choice if writing a melody feels intimidating.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Chord progressions -->
+  <section>
+    <div class="section-label">Standard folk progressions</div>
+    <p>These are common chord patterns used in folk music across many traditions. You don't have to use them (a solo melody with no chords is completely valid), but if you want harmonic structure, these are reliable starting points.</p>
+
+    <div class="progression-display">
+      <div class="prog-label">Click a progression to see it</div>
+      <div class="prog-tabs">
+        <button class="prog-tab active" onclick="showProg('simple')">Simple loop</button>
+        <button class="prog-tab" onclick="showProg('verse')">Verse cadence</button>
+        <button class="prog-tab" onclick="showProg('dorian')">Minor loop</button>
+      </div>
+
+      <div class="prog-content visible" id="prog-simple">
+        <div class="chord-row">
+          <div class="chord-box accent">G</div>
+          <span class="chord-arrow">→</span>
+          <div class="chord-box">D</div>
+          <span class="chord-arrow">→</span>
+          <div class="chord-box">G</div>
+        </div>
+        <p class="prog-note">I – V – I. The most fundamental motion in tonal music. Verse after verse, this loop stays fresh because of what you put on top of it. Used in countless work songs, ballads, and children's songs.</p>
+      </div>
+
+      <div class="prog-content" id="prog-verse">
+        <div class="chord-row">
+          <div class="chord-box accent">G</div>
+          <span class="chord-arrow">→</span>
+          <div class="chord-box">C</div>
+          <span class="chord-arrow">→</span>
+          <div class="chord-box">D</div>
+          <span class="chord-arrow">→</span>
+          <div class="chord-box accent">G</div>
+        </div>
+        <p class="prog-note">I – IV – V – I. The classic folk cadence. The IV chord (C) adds a little color and the V chord (D) creates tension that resolves satisfyingly back to home. This pattern underlies an enormous proportion of folk and country music.</p>
+      </div>
+
+      <div class="prog-content" id="prog-dorian">
+        <div class="chord-row">
+          <div class="chord-box accent">Am</div>
+          <span class="chord-arrow">→</span>
+          <div class="chord-box">G</div>
+          <span class="chord-arrow">→</span>
+          <div class="chord-box">Am</div>
+        </div>
+        <p class="prog-note">i - VII - i. A minor-key loop that borrows its VII chord from a related scale. This is a preview of something you'll explore more next week, but for now: notice that the VII chord here is major (G major) even though the tonic is minor (Am). The contrast creates a circular, slightly ambiguous quality common in Celtic, Appalachian, and Scandinavian folk music. Good for songs about the past or about longing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Structure -->
+  <section>
+    <div class="section-label">Build your structure</div>
+    <p>Most folk songs use a verse-and-chorus structure, though a simple repeated verse form is equally valid. Click each section to expand it and write your lyrics. You don't need all three; a verse and chorus is plenty.</p>
+
+    <div class="structure-template">
+      <div class="section-block">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="section-tag">Verse</span>
+          <span class="section-desc">Tells the story: specific, narrative, changes each time</span>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-body">
+          <div class="line-group">
+            <p class="line-hint">Line 1: set the scene or introduce a character</p>
+            <input class="song-line" type="text" placeholder="Write here…">
+          </div>
+          <div class="line-group">
+            <p class="line-hint">Line 2: continue or complicate</p>
+            <input class="song-line" type="text" placeholder="Write here…">
+          </div>
+          <div class="line-group">
+            <p class="line-hint">Line 3: build toward the chorus</p>
+            <input class="song-line" type="text" placeholder="Write here…">
+          </div>
+          <div class="line-group">
+            <p class="line-hint">Line 4: close the verse</p>
+            <input class="song-line" type="text" placeholder="Write here…">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="section-tag">Chorus</span>
+          <span class="section-desc">The emotional core, stays the same each time through</span>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-body">
+          <div class="line-group">
+            <p class="line-hint">Your central idea in one or two lines (this is what people will remember)</p>
+            <input class="song-line" type="text" placeholder="Write here…">
+          </div>
+          <div class="line-group">
+            <p class="line-hint">Line 2</p>
+            <input class="song-line" type="text" placeholder="Write here…">
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-header" onclick="toggleSection(this)">
+          <span class="section-tag">Bridge</span>
+          <span class="section-desc">Optional: a shift in perspective or key idea</span>
+          <span class="section-toggle">▼</span>
+        </div>
+        <div class="section-body">
+          <div class="line-group">
+            <p class="line-hint">A bridge offers contrast. It might shift the point of view, introduce a new thought, or land in a slightly different place emotionally.</p>
+            <input class="song-line" type="text" placeholder="Write here…">
+          </div>
+          <div class="line-group">
+            <p class="line-hint">Line 2</p>
+            <input class="song-line" type="text" placeholder="Write here…">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Example -->
+  <section>
+    <div class="section-label">A completed example</div>
+    <p>This is what an acceptable, complete folk song submission looks like. It's short, simple, and specific. The reflection (not shown here) would explain the scale used, discuss why folk music has historically been a vehicle for community storytelling, and connect the piece to a personal or cultural tradition.</p>
+
+    <div class="example-box">
+      <div class="example-section-label">Verse 1</div>
+      <div class="example-lyric">
+        My grandmother came across the sea,<br>
+        She carried a song she learned as a child.<br>
+        I never heard her sing it clear,<br>
+        Just humming low and mild.
+      </div>
+      <div class="example-section-label">Chorus</div>
+      <div class="example-lyric">
+        Hold on to the old songs,<br>
+        Pass them on before they're gone.
+      </div>
+      <div class="example-section-label">Note on this example</div>
+      <p style="font-size:0.88rem; color:#3a5a35; font-style:italic; margin-top:8px;">This song uses G Major, a simple AABB rhyme scheme, and stepwise melodic motion. It's direct and personal, not elaborate. That's exactly the right level for this assignment.</p>
+    </div>
+  </section>
+
+  <!-- Try This -->
+  <div class="try-this">
+    <div class="try-label">Try this</div>
+    <h3>Finding your subject</h3>
+    <p>Folk songs are about shared human experience, but they start with something specific. Here's a way in.</p>
+    <div class="prompt-steps">
+      <div class="prompt-step">Think of something your family or community does (or did) that has a particular feeling to it: a tradition, a gathering, a place, a ritual, even a recurring meal. Don't overthink it.</div>
+      <div class="prompt-step">Write three specific details about it. Not general impressions. Sensory, particular details. ("The smell of the oil." "My uncle always stood by the door." "It only happened in November.")</div>
+      <div class="prompt-step">Pick the most evocative detail and write one line about it. That's your first line.</div>
+      <div class="prompt-step">Choose a scale from above that fits the mood. Hum a simple melody over the notes, something that moves mostly by step (neighbors on the scale), and try to land on the tonic at the end of each line.</div>
+      <div class="prompt-step">Write your chorus as a single idea: what does all of this mean? What do you want someone to carry away from the song?</div>
+    </div>
+  </div>
+
+  <!-- Reflection -->
+  <section>
+    <div class="section-label">Reflection notes</div>
+    <p>Your 1–2 page reflection should use course vocabulary and connect your piece to folk traditions. Use these prompts to start collecting your thoughts.</p>
+    <div class="reflection-area">
+      <p class="reflection-q">Which scale did you use, and what was the effect? How did the scale choice shape the mood of your piece?</p>
+      <textarea class="reflection-input" placeholder="Notes…" rows="3"></textarea>
+
+      <p class="reflection-q">What folk tradition or community experience does your song connect to? How does folk music typically express communal values and storytelling?</p>
+      <textarea class="reflection-input" placeholder="Notes…" rows="3"></textarea>
+
+      <p class="reflection-q">What musical choices did you make in melody, form, and rhythm, and why did you make them?</p>
+      <textarea class="reflection-input" placeholder="Notes…" rows="3"></textarea>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-label">What a complete submission includes</div>
+    <div class="checklist">
+      <div class="check-item">
+        <span class="check-icon">◆</span>
+        <span>A creative component: notation, a lead sheet, an audio recording, or any clear representation of your melody and text. Clarity matters; production value does not.</span>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">◆</span>
+        <span>At least one complete verse (and ideally a chorus). The melody should use a named scale and move primarily by step.</span>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">◆</span>
+        <span>A 1–2 page written reflection connecting your piece to folk traditions, your musical choices, and your own cultural or personal context. Use course vocabulary.</span>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">◆</span>
+        <span>A brief in-class introduction during the final week (1–2 minutes). You do not have to sing it live.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-left">MUS 108 · CSU East Bay · Final Creative Project</div>
+    <nav class="footer-nav">
+      <a href="#">Option B: Blues Song →</a>
+      <a href="#">Option C: Popular Song →</a>
+    </nav>
+  </footer>
+
+</div>
+
+<script>
+  function showScale(id) {
+    document.querySelectorAll('.scale-display').forEach(el => el.classList.remove('visible'));
+    document.querySelectorAll('.scale-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById('scale-' + id).classList.add('visible');
+    event.target.classList.add('active');
+  }
+
+  function showProg(id) {
+    document.querySelectorAll('.prog-content').forEach(el => el.classList.remove('visible'));
+    document.querySelectorAll('.prog-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById('prog-' + id).classList.add('visible');
+    event.target.classList.add('active');
+  }
+
+  function toggleSection(header) {
+    const body = header.nextElementSibling;
+    const toggle = header.querySelector('.section-toggle');
+    body.classList.toggle('open');
+    toggle.textContent = body.classList.contains('open') ? '▲' : '▼';
+  }
+</script>
+</body>
+</html>

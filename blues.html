@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Option B: Blues Song - MUS 108</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1008;
+    --paper: #f5ede0;
+    --accent: #c0392b;
+    --warm: #e8d5b7;
+    --faint: #d4b896;
+    --highlight: #f0c040;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23f5ede0'/%3E%3Ccircle cx='1' cy='1' r='0.4' fill='%23c8a87a' opacity='0.3'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 60px 40px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--faint);
+    padding: 28px 0 22px;
+    margin-bottom: 48px;
+  }
+
+  .course-tag {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .subtitle {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #5a4030;
+    font-style: italic;
+  }
+
+  /* Sections */
+  section {
+    margin-bottom: 48px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faint);
+    font-weight: 400;
+    margin-bottom: 14px;
+    border-bottom: 1px solid var(--warm);
+    padding-bottom: 8px;
+  }
+
+  p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #2a1a0e;
+    margin-bottom: 1em;
+  }
+
+  /* Chord chart */
+  .chord-chart {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+    padding: 32px 36px;
+    margin: 24px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chord-chart::before {
+    content: '12-BAR BLUES';
+    position: absolute;
+    top: 12px;
+    right: 20px;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--faint);
+    opacity: 0.6;
+  }
+
+  .key-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--highlight);
+    margin-bottom: 20px;
+  }
+
+  .bars {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+  }
+
+  .bar {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 3px;
+    padding: 12px 10px;
+    text-align: center;
+    position: relative;
+    cursor: default;
+  }
+
+  .bar-num {
+    font-size: 9px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .chord-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--paper);
+    line-height: 1;
+  }
+
+  .bar.tonic .chord-name { color: var(--highlight); }
+  .bar.subdominant .chord-name { color: #90cdf4; }
+  .bar.dominant .chord-name { color: #fca5a5; }
+
+  .chord-function {
+    font-size: 9px;
+    margin-top: 5px;
+    opacity: 0.5;
+    letter-spacing: 0.08em;
+  }
+
+  .roman-legend {
+    margin-top: 18px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+
+  /* Scale box */
+  .scale-box {
+    background: var(--warm);
+    border-left: 3px solid var(--accent);
+    padding: 24px 28px;
+    margin: 20px 0;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .scale-title {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .scale-notes {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .note-pill {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 3px;
+    padding: 6px 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .note-pill.blue-note {
+    background: var(--accent);
+  }
+
+  .note-arrow {
+    color: var(--faint);
+    font-size: 0.85rem;
+  }
+
+  .scale-note {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #5a4030;
+  }
+
+  /* AAB template */
+  .lyric-template {
+    margin: 20px 0;
+  }
+
+  .lyric-row {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 12px;
+    align-items: start;
+    margin-bottom: 16px;
+  }
+
+  .lyric-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    padding-top: 4px;
+  }
+
+  .lyric-line-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .lyric-line {
+    border: none;
+    border-bottom: 1.5px solid var(--faint);
+    background: transparent;
+    font-family: 'Source Serif 4', serif;
+    font-size: 1rem;
+    font-style: italic;
+    color: var(--ink);
+    padding: 6px 2px;
+    width: 100%;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .lyric-line::placeholder { color: var(--faint); font-style: italic; }
+  .lyric-line:focus { border-bottom-color: var(--accent); }
+
+  .lyric-hint {
+    font-size: 0.8rem;
+    color: #8a6a50;
+    font-style: italic;
+  }
+
+  /* Example box */
+  .example-box {
+    background: white;
+    border: 1px solid var(--faint);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin: 20px 0;
+    position: relative;
+  }
+
+  .example-box::before {
+    content: 'EXAMPLE';
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: white;
+    padding: 0 8px;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--faint);
+  }
+
+  .example-lyric {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 2;
+    color: #2a1a0e;
+  }
+
+  .example-lyric span {
+    color: var(--accent);
+    font-style: normal;
+    font-size: 0.8rem;
+    font-family: 'Source Serif 4', serif;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* Try this */
+  .try-this {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 6px;
+    padding: 36px 40px;
+    margin: 32px 0;
+  }
+
+  .try-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--highlight);
+    margin-bottom: 14px;
+  }
+
+  .try-this h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-style: italic;
+    margin-bottom: 16px;
+    color: var(--paper);
+  }
+
+  .try-this p {
+    color: rgba(245,237,224,0.8);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .prompt-steps {
+    margin: 20px 0;
+    counter-reset: steps;
+  }
+
+  .prompt-step {
+    counter-increment: steps;
+    padding: 14px 0 14px 44px;
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    color: rgba(245,237,224,0.85);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .prompt-step:last-child { border-bottom: none; }
+
+  .prompt-step::before {
+    content: counter(steps);
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 28px; height: 28px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--highlight);
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+    line-height: 28px;
+  }
+
+  /* What counts */
+  .checklist {
+    margin: 16px 0;
+  }
+
+  .check-item {
+    display: flex;
+    gap: 14px;
+    align-items: start;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--warm);
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #2a1a0e;
+  }
+
+  .check-icon {
+    color: var(--accent);
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* Reflection prompts */
+  .reflection-area {
+    margin: 16px 0;
+  }
+
+  .reflection-q {
+    font-style: italic;
+    color: #5a4030;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    line-height: 1.6;
+  }
+
+  .reflection-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--faint);
+    background: transparent;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    padding: 8px 2px;
+    margin-bottom: 20px;
+    outline: none;
+    resize: none;
+    min-height: 60px;
+    transition: border-color 0.2s;
+  }
+
+  .reflection-input:focus { border-bottom-color: var(--accent); }
+  .reflection-input::placeholder { color: var(--faint); font-style: italic; }
+
+  /* Footer */
+  .footer {
+    border-top: 1px solid var(--faint);
+    padding-top: 24px;
+    margin-top: 64px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: gap;
+  }
+
+  .footer-left {
+    font-size: 11px;
+    color: var(--faint);
+    letter-spacing: 0.1em;
+  }
+
+  .footer-nav {
+    display: flex;
+    gap: 16px;
+  }
+
+  .footer-nav a {
+    font-size: 11px;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .footer-nav a:hover { border-bottom-color: var(--accent); }
+
+  @media (max-width: 600px) {
+    .page { padding: 40px 24px 60px; }
+    h1 { font-size: 2.2rem; }
+    .bars { grid-template-columns: repeat(2, 1fr); }
+    .chord-chart { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="course-tag">MUS 108 - The Language of Music &nbsp;·&nbsp; Final Creative Project</div>
+    <h1>Option B:<br><em>Blues Song</em></h1>
+    <p class="subtitle">A guide for building your piece, step by step.</p>
+  </header>
+
+  <!-- What this is -->
+  <section>
+    <div class="section-label">What you're making</div>
+    <p>The Blues Song option asks you to write a short piece using the 12-bar blues form, one of the most foundational structures in American music. You don't need to know how to play guitar or piano. What matters is that you understand the form, write something personal using the AAB lyric pattern, and connect your piece to the cultural history it comes from.</p>
+    <p>The materials below give you everything you need to get started: a chord chart, the blues scale, a lyric template, and a worked example. Use as much or as little as feels right.</p>
+  </section>
+
+  <!-- The form -->
+  <section>
+    <div class="section-label">The 12-Bar Form</div>
+    <p>Blues music is built on a repeating 12-bar harmonic pattern. Each box below is one measure. The pattern uses three chords: the <strong>I chord</strong> (home), the <strong>IV chord</strong> (a step away), and the <strong>V chord</strong> (tension before returning home). In the key of A, those are A, D, and E.</p>
+
+    <div class="chord-chart">
+      <div class="key-label">Key of A - one pass through the 12-bar form</div>
+      <div class="bars">
+        <div class="bar tonic">
+          <span class="bar-num">BAR 1</span>
+          <div class="chord-name">A</div>
+          <div class="chord-function">I</div>
+        </div>
+        <div class="bar tonic">
+          <span class="bar-num">BAR 2</span>
+          <div class="chord-name">A</div>
+          <div class="chord-function">I</div>
+        </div>
+        <div class="bar tonic">
+          <span class="bar-num">BAR 3</span>
+          <div class="chord-name">A</div>
+          <div class="chord-function">I</div>
+        </div>
+        <div class="bar tonic">
+          <span class="bar-num">BAR 4</span>
+          <div class="chord-name">A</div>
+          <div class="chord-function">I</div>
+        </div>
+        <div class="bar subdominant">
+          <span class="bar-num">BAR 5</span>
+          <div class="chord-name">D</div>
+          <div class="chord-function">IV</div>
+        </div>
+        <div class="bar subdominant">
+          <span class="bar-num">BAR 6</span>
+          <div class="chord-name">D</div>
+          <div class="chord-function">IV</div>
+        </div>
+        <div class="bar tonic">
+          <span class="bar-num">BAR 7</span>
+          <div class="chord-name">A</div>
+          <div class="chord-function">I</div>
+        </div>
+        <div class="bar tonic">
+          <span class="bar-num">BAR 8</span>
+          <div class="chord-name">A</div>
+          <div class="chord-function">I</div>
+        </div>
+        <div class="bar dominant">
+          <span class="bar-num">BAR 9</span>
+          <div class="chord-name">E</div>
+          <div class="chord-function">V</div>
+        </div>
+        <div class="bar subdominant">
+          <span class="bar-num">BAR 10</span>
+          <div class="chord-name">D</div>
+          <div class="chord-function">IV</div>
+        </div>
+        <div class="bar tonic">
+          <span class="bar-num">BAR 11</span>
+          <div class="chord-name">A</div>
+          <div class="chord-function">I</div>
+        </div>
+        <div class="bar dominant">
+          <span class="bar-num">BAR 12</span>
+          <div class="chord-name">E</div>
+          <div class="chord-function">V</div>
+        </div>
+      </div>
+      <div class="roman-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#f0c040"></div> I - home chord (A)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#90cdf4"></div> IV - middle chord (D)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#fca5a5"></div> V - tension chord (E)</div>
+      </div>
+    </div>
+
+    <p>You don't have to play these chords. You can hum a melody over them, write lyrics that fit their rhythm, or simply reference the pattern in your written reflection. What matters is that you understand how the form moves.</p>
+  </section>
+
+  <!-- The scale -->
+  <section>
+    <div class="section-label">The Blues Scale</div>
+    <p>If you want to write or sing a melody, these are the notes that will sound at home over the blues form. The blues scale is a modified minor scale: it uses the same intervalic framework as minor but omits two notes and adds one note that doesn't appear in either major or minor. That added note, E♭ (sometimes called the "blue note"), sits between the fourth and fifth scale degrees. It gives blues music its characteristic sound, slightly bent away from the major or minor pattern, which is part of what makes it so expressive.</p>
+
+    <div class="scale-box">
+      <div class="scale-title">A Blues Scale</div>
+      <div class="scale-notes">
+        <div class="note-pill">A</div>
+        <div class="note-arrow">→</div>
+        <div class="note-pill">C</div>
+        <div class="note-arrow">→</div>
+        <div class="note-pill">D</div>
+        <div class="note-arrow">→</div>
+        <div class="note-pill blue-note">E♭</div>
+        <div class="note-arrow">→</div>
+        <div class="note-pill">E</div>
+        <div class="note-arrow">→</div>
+        <div class="note-pill">G</div>
+        <div class="note-arrow">→</div>
+        <div class="note-pill">A</div>
+      </div>
+      <p class="scale-note">The red note is the "blue note." Try using it at an emotionally charged moment in your lyric.</p>
+    </div>
+  </section>
+
+  <!-- AAB structure -->
+  <section>
+    <div class="section-label">The AAB Lyric Structure</div>
+    <p>Blues lyrics traditionally follow an AAB pattern: the first line states something (A), the second line repeats or slightly varies it (A again), and the third line responds, resolves, or turns it (B). This structure is ancient and effective: the repetition builds tension, and the final line releases it.</p>
+
+    <div class="example-box">
+      <div class="example-lyric">
+        Woke up this morning, couldn't find my keys. <span>(A)</span><br>
+        Said I woke up this morning, couldn't find my keys. <span>(A, repeated)</span><br>
+        Looked under everything: they were right in front of me. <span>(B - turn)</span>
+      </div>
+    </div>
+
+    <p>The example above is deliberately ordinary. That's the point. Blues has always been about real, lived experience, not grand tragedy or poetry for a grade. Write about something that actually happened to you.</p>
+  </section>
+
+  <!-- Write your own -->
+  <section>
+    <div class="section-label">Write your verse here</div>
+    <p>Use the space below to draft your AAB lyric. You can write as many verses as you want; one complete verse is the minimum for your submission.</p>
+
+    <div class="lyric-template">
+      <div class="lyric-row">
+        <div class="lyric-letter">A</div>
+        <div class="lyric-line-wrap">
+          <input class="lyric-line" type="text" placeholder="Write your first line here…">
+          <span class="lyric-hint">State something: a feeling, a situation, an observation.</span>
+        </div>
+      </div>
+      <div class="lyric-row">
+        <div class="lyric-letter">A</div>
+        <div class="lyric-line-wrap">
+          <input class="lyric-line" type="text" placeholder="Repeat or vary your first line…">
+          <span class="lyric-hint">You can repeat it exactly, or change a word or two.</span>
+        </div>
+      </div>
+      <div class="lyric-row">
+        <div class="lyric-letter">B</div>
+        <div class="lyric-line-wrap">
+          <input class="lyric-line" type="text" placeholder="Write your response or resolution…">
+          <span class="lyric-hint">This line turns the corner. It answers, resolves, or surprises.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Try This -->
+  <div class="try-this">
+    <div class="try-label">Try this</div>
+    <h3>Getting unstuck</h3>
+    <p>If you're staring at a blank page, these steps can help you get something down.</p>
+    <div class="prompt-steps">
+      <div class="prompt-step">Pick one specific moment from your life, not a general feeling but an actual event. Something small works better than something dramatic. ("Missed my BART train." "My phone died at the wrong time." "Said the wrong thing.")</div>
+      <div class="prompt-step">Write one sentence that describes what happened, in plain language. Don't worry about making it poetic yet.</div>
+      <div class="prompt-step">Now write it again, almost the same, but change one or two words to shift the feeling slightly. That's your A–A pair.</div>
+      <div class="prompt-step">Write a third sentence that responds to the first two. This can be a consequence, a realization, or even a joke. That's your B line.</div>
+      <div class="prompt-step">Read it aloud and tap a beat while you do. Blues lyrics have a natural rhythm. If something feels awkward to say, you can rearrange the words until it flows.</div>
+    </div>
+  </div>
+
+  <!-- Reflection -->
+  <section>
+    <div class="section-label">Reflection notes (start here, refine later)</div>
+    <p>Your written reflection is 1-2 pages and should use course vocabulary. Use the space below to jot down initial thoughts; you can develop these into your full reflection later.</p>
+
+    <div class="reflection-area">
+      <p class="reflection-q">What musical ideas did you use? (Think about form, rhythm, scale, melody.)</p>
+      <textarea class="reflection-input" placeholder="Notes…" rows="3"></textarea>
+
+      <p class="reflection-q">Where does the blues come from, and what does your piece connect to in that history?</p>
+      <textarea class="reflection-input" placeholder="Notes…" rows="3"></textarea>
+
+      <p class="reflection-q">What does your piece mean to you personally? What were you trying to express?</p>
+      <textarea class="reflection-input" placeholder="Notes…" rows="3"></textarea>
+    </div>
+  </section>
+
+  <!-- What counts -->
+  <section>
+    <div class="section-label">What a complete submission includes</div>
+    <div class="checklist">
+      <div class="check-item">
+        <span class="check-icon">◆</span>
+        <span>A creative component: handwritten notation, a lead sheet, a recording (even a voice memo), or any clear representation of your piece. The goal is clarity, not polish.</span>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">◆</span>
+        <span>At least one complete AAB verse with lyrics.</span>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">◆</span>
+        <span>A 1–2 page written reflection that explains your musical choices, connects your piece to the cultural and historical roots of the blues, and uses course vocabulary.</span>
+      </div>
+      <div class="check-item">
+        <span class="check-icon">◆</span>
+        <span>A brief in-class introduction (1-2 minutes) during the final week. No live performance required.</span>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-left">MUS 108 · CSU East Bay · Final Creative Project</div>
+    <nav class="footer-nav">
+      <a href="#">← Option A: Folk Song</a>
+      <a href="#">Option C: Popular Song →</a>
+    </nav>
+  </footer>
+
+</div>
+</body>
+</html>

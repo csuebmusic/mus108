@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Final Creative Project - MUS 108</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #12100e;
+    --paper: #f7f3ed;
+    --rule: #d6cfc5;
+    --faint: #b0a898;
+    --mid: #e8e2d8;
+    --folk: #3a6b35;
+    --blues: #c0392b;
+    --pop: #4a3a8a;
+    --folk-bg: #eef4e8;
+    --blues-bg: #f5ede0;
+    --pop-bg: #eeeaf8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='5' height='5'%3E%3Crect width='5' height='5' fill='%23f7f3ed'/%3E%3Ccircle cx='1' cy='1' r='0.4' fill='%23a09080' opacity='0.18'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 64px 44px 96px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  .header {
+    border-top: 5px solid var(--ink);
+    padding-top: 32px;
+    margin-bottom: 56px;
+  }
+
+  .course-tag {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 12px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 3.4rem;
+    font-weight: 700;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    margin-bottom: 16px;
+  }
+
+  .header-desc {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #3a3028;
+    max-width: 580px;
+    border-left: 3px solid var(--rule);
+    padding-left: 20px;
+    margin-top: 20px;
+  }
+
+  /* Sections */
+  section {
+    margin-bottom: 52px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  p {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: #2a2218;
+    margin-bottom: 1em;
+  }
+
+  p:last-child { margin-bottom: 0; }
+
+  /* Timeline */
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin: 24px 0;
+    background: var(--rule);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .timeline-item {
+    background: var(--paper);
+    padding: 24px 22px;
+    position: relative;
+  }
+
+  .tl-stage {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 8px;
+  }
+
+  .tl-date {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.1;
+  }
+
+  .tl-desc {
+    font-size: 0.85rem;
+    line-height: 1.55;
+    color: #5a5040;
+    font-style: italic;
+  }
+
+  .timeline-item.draft1 { border-top: 3px solid #888; }
+  .timeline-item.draft2 { border-top: 3px solid #555; }
+  .timeline-item.final  { border-top: 3px solid var(--ink); }
+
+  /* Draft guidelines */
+  .draft-block {
+    background: var(--mid);
+    border-radius: 4px;
+    padding: 28px 32px;
+    margin: 16px 0;
+  }
+
+  .draft-block + .draft-block { margin-top: 8px; }
+
+  .draft-title {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 10px;
+  }
+
+  .draft-block p {
+    font-size: 0.95rem;
+    color: #2a2218;
+    margin-bottom: 0.6em;
+  }
+
+  /* Option cards */
+  .option-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 24px 0;
+  }
+
+  .option-card {
+    border-radius: 5px;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    position: relative;
+  }
+
+  .option-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+
+  .option-card:active {
+    transform: translateY(-1px);
+  }
+
+  .card-stripe {
+    height: 5px;
+  }
+
+  .folk .card-stripe  { background: var(--folk); }
+  .blues .card-stripe { background: var(--blues); }
+  .pop .card-stripe   { background: var(--pop); }
+
+  .card-body {
+    padding: 26px 24px 28px;
+  }
+
+  .folk .card-body  { background: var(--folk-bg); }
+  .blues .card-body { background: var(--blues-bg); }
+  .pop .card-body   { background: var(--pop-bg); }
+
+  .card-option {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .folk  .card-option { color: var(--folk); }
+  .blues .card-option { color: var(--blues); }
+  .pop   .card-option { color: var(--pop); }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+
+  .card-desc {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #3a3028;
+    margin-bottom: 18px;
+  }
+
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 20px;
+  }
+
+  .tag {
+    font-size: 10px;
+    padding: 3px 9px;
+    border-radius: 2px;
+    letter-spacing: 0.06em;
+    background: rgba(0,0,0,0.07);
+    color: #3a3028;
+  }
+
+  .card-cta {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .folk  .card-cta { color: var(--folk); }
+  .blues .card-cta { color: var(--blues); }
+  .pop   .card-cta { color: var(--pop); }
+
+  .cta-arrow {
+    font-size: 0.9rem;
+    transition: transform 0.15s;
+  }
+
+  .option-card:hover .cta-arrow { transform: translateX(4px); }
+
+  /* Submission info */
+  .submit-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .submit-block {
+    background: var(--mid);
+    border-radius: 4px;
+    padding: 22px 24px;
+  }
+
+  .submit-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--rule);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .submit-title {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 8px;
+  }
+
+  .submit-block p {
+    font-size: 0.9rem;
+    color: #3a3028;
+    line-height: 1.6;
+    margin-bottom: 0;
+  }
+
+  /* FAQ */
+  .faq-item {
+    border-bottom: 1px solid var(--rule);
+    padding: 16px 0;
+  }
+
+  .faq-item:first-child { padding-top: 0; }
+
+  .faq-q {
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 6px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 12px;
+  }
+
+  .faq-toggle {
+    color: var(--faint);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: transform 0.2s;
+  }
+
+  .faq-a {
+    font-size: 0.9rem;
+    color: #5a5040;
+    line-height: 1.65;
+    font-style: italic;
+    display: none;
+    padding-top: 8px;
+  }
+
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open .faq-toggle { transform: rotate(45deg); }
+
+  /* Reminder box */
+  .reminder {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 5px;
+    padding: 36px 40px;
+    margin-top: 48px;
+    text-align: center;
+  }
+
+  .reminder-label {
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(215,205,190,0.6);
+    margin-bottom: 16px;
+  }
+
+  .reminder p {
+    color: rgba(247,243,237,0.85);
+    font-size: 1rem;
+    line-height: 1.8;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .reminder strong {
+    color: var(--paper);
+    font-weight: 600;
+  }
+
+  /* Footer */
+  .footer {
+    border-top: 1px solid var(--rule);
+    padding-top: 24px;
+    margin-top: 64px;
+    font-size: 11px;
+    color: var(--faint);
+    letter-spacing: 0.08em;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 40px 24px 64px; }
+    h1 { font-size: 2.4rem; }
+    .timeline { grid-template-columns: 1fr; }
+    .option-grid { grid-template-columns: 1fr; }
+    .submit-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="header">
+    <div class="course-tag">MUS 108 - The Language of Music &nbsp;·&nbsp; CSU East Bay</div>
+    <h1>Final Creative<br>Project</h1>
+    <p class="header-desc">This is your opportunity to use the musical ideas we've studied this semester to create something of your own and reflect on how music communicates meaning, culture, and identity. You do not need prior musical training to succeed. You are expected to apply basic concepts thoughtfully, not to compose something professional or complex.</p>
+  </header>
+
+  <!-- Timeline -->
+  <section>
+    <div class="section-label">Project timeline</div>
+    <div class="timeline">
+      <div class="timeline-item draft1">
+        <div class="tl-stage">Draft 1</div>
+        <div class="tl-date">April 20</div>
+        <p class="tl-desc">Basic musical idea and a short paragraph explaining your option and concepts so far. Commitment, not completion.</p>
+      </div>
+      <div class="timeline-item draft2">
+        <div class="tl-stage">Draft 2</div>
+        <div class="tl-date">April 27</div>
+        <p class="tl-desc">More complete version with clearer form and a revised reflection explaining what changed and why.</p>
+      </div>
+      <div class="timeline-item final">
+        <div class="tl-stage">Final Presentation</div>
+        <div class="tl-date">May 4</div>
+        <p class="tl-desc">Share your project with the class. A brief introduction, your music, and a few words about what it means to you.</p>
+      </div>
+    </div>
+    <p style="font-size:0.88rem; color:var(--faint); font-style:italic; margin-top:12px;">Drafts are graded for completion and effort, not perfection.</p>
+  </section>
+
+  <!-- Choose your option -->
+  <section>
+    <div class="section-label">Choose your option</div>
+    <p>Select one of the three options below. Each links to a full guide with scale and chord materials, a lyric writing space, a worked example, and reflection prompts to help you get started.</p>
+
+    <div class="option-grid">
+
+      <a class="option-card folk" href="folk.html">
+        <div class="card-stripe"></div>
+        <div class="card-body">
+          <div class="card-option">Option A</div>
+          <div class="card-title">Folk Song</div>
+          <p class="card-desc">Compose a short folk-style song using a clear scale and simple melodic motion. Reflect on how folk music expresses community values and shared identity.</p>
+          <div class="card-tags">
+            <span class="tag">Major or minor scale</span>
+            <span class="tag">Verse / chorus form</span>
+            <span class="tag">Lyrics or poem</span>
+          </div>
+          <div class="card-cta">Open guide <span class="cta-arrow">→</span></div>
+        </div>
+      </a>
+
+      <a class="option-card blues" href="blues.html">
+        <div class="card-stripe"></div>
+        <div class="card-body">
+          <div class="card-option">Option B</div>
+          <div class="card-title">Blues Song</div>
+          <p class="card-desc">Compose a 12-bar blues using an AAB lyric structure. Connect your piece to the African American cultural and historical roots of the blues.</p>
+          <div class="card-tags">
+            <span class="tag">Blues scale</span>
+            <span class="tag">12-bar form</span>
+            <span class="tag">AAB lyrics</span>
+          </div>
+          <div class="card-cta">Open guide <span class="cta-arrow">→</span></div>
+        </div>
+      </a>
+
+      <a class="option-card pop" href="popular.html">
+        <div class="card-stripe"></div>
+        <div class="card-body">
+          <div class="card-option">Option C</div>
+          <div class="card-title">Popular Song</div>
+          <p class="card-desc">Create a short popular-style song with a clear melodic structure and basic harmony. Reflect on how popular music functions as personal and global expression.</p>
+          <div class="card-tags">
+            <span class="tag">Major scale</span>
+            <span class="tag">Verse / chorus</span>
+            <span class="tag">Chord progressions</span>
+          </div>
+          <div class="card-cta">Open guide <span class="cta-arrow">→</span></div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- What to submit -->
+  <section>
+    <div class="section-label">What you will submit</div>
+    <p>Your final project has two components. Every option requires both.</p>
+    <div class="submit-row">
+      <div class="submit-block">
+        <div class="submit-num">1</div>
+        <div class="submit-title">Creative Component</div>
+        <p>This can be handwritten or digital notation, a lead sheet, a chord chart, an audio recording (voice memo, phone recording, or DAW export), or a combination. The goal is clarity, not polish.</p>
+      </div>
+      <div class="submit-block">
+        <div class="submit-num">2</div>
+        <div class="submit-title">Written Reflection (1-2 pages)</div>
+        <p>Explain what musical ideas you used, why you made the choices you made, and what expressive, cultural, or personal meaning your piece carries. Use course vocabulary, but write in your own voice.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Draft guidelines -->
+  <section>
+    <div class="section-label">Draft guidelines</div>
+
+    <div class="draft-block">
+      <div class="draft-title">Draft 1 - April 20: Getting Started</div>
+      <p>Include the basic structure of your piece and at least one clear musical idea (a melody, chord loop, rhythm, or form). Add a short paragraph explaining which option you chose and which concepts you are working with so far. This draft is about commitment, not completion.</p>
+    </div>
+
+    <div class="draft-block">
+      <div class="draft-title">Draft 2 - April 27: Developing Your Idea</div>
+      <p>Your second draft should show clearer form, more intentional pitch and harmony, and a developing connection to cultural or expressive goals. Your reflection should explain what changed since Draft 1 and how course concepts shaped your decisions.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="section-label">Frequently asked questions</div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Do I have to sing or perform live? <span class="faq-toggle">+</span></div>
+      <p class="faq-a">No. You may use recordings, instruments, or notation only. The final presentation is about sharing your work, not performing it.</p>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">What if I don't think I'm "creative"? <span class="faq-toggle">+</span></div>
+      <p class="faq-a">Creativity in this assignment means making choices, not inventing something new. Choosing a scale, writing a line of text, and deciding what it means: that is the work.</p>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Can I use technology? <span class="faq-toggle">+</span></div>
+      <p class="faq-a">Yes. Phone recordings, GarageBand, DAWs, and notation software are all welcome. If your recording is a voice memo made on a walk, that counts. Use whatever helps you capture the idea.</p>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">Can I work with someone else? <span class="faq-toggle">+</span></div>
+      <p class="faq-a">Yes, but check with me first.</p>
+    </div>
+    <div class="faq-item" onclick="toggleFaq(this)">
+      <div class="faq-q">How will the final presentation work? <span class="faq-toggle">+</span></div>
+      <p class="faq-a">During the final week you will briefly introduce your project (1-2 minutes), share your music live or recorded, and say a few words about what it means to you. It is a low-pressure, supportive environment. You are not being judged as a performer.</p>
+    </div>
+  </section>
+
+  <!-- Reminder -->
+  <div class="reminder">
+    <div class="reminder-label">Final reminder</div>
+    <p>This project is about <strong>applying the language of music,</strong> exploring how music communicates meaning, and connecting musical structure to real human experience. You are not expected to be an expert. You are expected to <strong>try, reflect, and explain.</strong></p>
+  </div>
+
+  <footer class="footer">
+    <span>MUS 108 - The Language of Music &nbsp;·&nbsp; CSU East Bay</span>
+    <span>Instructor: Ines Thiebaut</span>
+  </footer>
+
+</div>
+
+<script>
+  function toggleFaq(item) {
+    item.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
